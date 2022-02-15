@@ -41,4 +41,22 @@ $(document).ready(function() {
             scrollTop: 0
         }, 500);
     });
+
+    $('section').each(function() {
+        var heightSection = $(this).height(),
+            offsetTop = $(this).offset().top,
+            menuHeight = $('.menu').innerHeight(),
+            idSection = $(this).attr('id'),
+            $itemMenu = $('a[href="#' + idSection + '"]');
+
+        $(window).scroll(function() {
+            var scrollTop = $(window).scrollTop();
+
+            if(offsetTop - menuHeight < scrollTop && offsetTop + heightSection - menuHeight > scrollTop) {
+                $itemMenu.addClass('active');
+            } else{
+                $itemMenu.removeClass('active');
+            }
+        });
+    });
 });
