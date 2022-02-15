@@ -21,4 +21,24 @@ $(document).ready(function() {
 
         });
     });
+
+    $('.menu-nav a[href^="#"]').click(function(e) {
+        e.preventDefault();
+
+        var idClick = $(this).attr('href'),
+            menuHeight = $('.menu').innerHeight(),
+            targetOffset = $(idClick).offset().top;
+
+        $('html, body').animate({
+            scrollTop: targetOffset - menuHeight
+        }, 500);
+    });
+
+    $('.logo').click(function(e) {
+        e.preventDefault();
+
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+    });
 });
