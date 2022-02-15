@@ -122,3 +122,26 @@ img {
 	width: 50%;
 	float: left;
 }
+
+.js [data-target] {
+	opacity: 0;
+	visibility: hidden;
+	transform: translate3d(-50px, 0, 0);
+	position: absolute;
+	top: 0;
+}
+
+.js [data-click].active {
+	background: #56CC9D;
+	color: #FFF;
+	border-color: #56CC9D;
+}
+
+.js [data-target].active {
+	opacity: 1;
+	visibility: visible;
+	transition: .3s;
+	transform: translate3d(0, 0, 0);
+	position: relative;
+	top: auto;
+}
