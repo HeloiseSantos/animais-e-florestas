@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    // Muda tab ao click
     $('[data-group]').each(function() {
         var $allTarget = $(this).find('[data-target]'),
             $allClick = $(this).find('[data-click]'),
@@ -22,6 +23,7 @@ $(document).ready(function() {
         });
     });
 
+    // Scroll suave para link interno
     $('.menu-nav a[href^="#"]').click(function(e) {
         e.preventDefault();
 
@@ -34,6 +36,7 @@ $(document).ready(function() {
         }, 500);
     });
 
+    // Scroll suave para o topo
     $('.logo').click(function(e) {
         e.preventDefault();
 
@@ -42,6 +45,7 @@ $(document).ready(function() {
         }, 500);
     });
 
+    // Mudar para active o menu de acordo com a área
     $('section').each(function() {
         var heightSection = $(this).height(),
             offsetTop = $(this).offset().top,
@@ -60,8 +64,38 @@ $(document).ready(function() {
         });
     });
 
+    // Botão do menu mobile
     $('.mobile-btn').click(function() {
         $(this).toggleClass('active');
         $('.mobile-menu').toggleClass('active');
     });
+
+    // Slide
+    function slider(sliderName, velocidade) {
+        var sliderClass = '.' + sliderName,
+            activeClass = 'active',
+            rotate = setInterval(rotateSlide, velocidade);
+
+        $(sliderClass + ' > :first').addClass(activeClass);
+
+        $(sliderClass).hover(function() {
+            clearInterval(rotate);
+        }, function() {
+            rotate = setInterval(rotateSlide, velocidade);
+        });
+
+        function rotateSlide() {
+            var activeSlide = $(sliderClass + ' > .' + activeClass),
+                nextSlide = activeSlide.next();
+    
+            if(nextSlide.length == 0) {
+                nextSlide = $(sliderClass + ' > :first');
+            }
+    
+            activeSlide.removeClass(activeClass);
+            nextSlide.addClass(activeClass);
+        }
+    }
+
+    slider('introducao', 2000);
 });
