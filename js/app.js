@@ -98,4 +98,28 @@ $(document).ready(function() {
     }
 
     slider('introducao', 2000);
+
+    // Animação ao scroll
+    var $target = $('[data-anime="scroll"]'),
+        animationClass = 'animate',
+        offset = $(window).height() * 4/5;
+
+    function animeScroll() {
+        var documentTop = $(window).scrollTop();
+        $target.each(function() {
+            var itemTop = $(this).offset().top;
+
+            if(documentTop > itemTop - offset) {
+                $(this).addClass(animationClass);
+            } else {
+                $(this).removeClass(animationClass);
+            }
+        });
+    }
+
+    animeScroll();
+
+    $(document).scroll(function() {
+        animeScroll();
+    })
 });
