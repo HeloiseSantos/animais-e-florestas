@@ -1,4 +1,20 @@
 $(document).ready(function() {
+    // Debounce do Lodash
+    debounce = function(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
+
     // Muda tab ao click
     $('[data-group]').each(function() {
         var $allTarget = $(this).find('[data-target]'),
@@ -53,7 +69,7 @@ $(document).ready(function() {
             idSection = $(this).attr('id'),
             $itemMenu = $('a[href="#' + idSection + '"]');
 
-        $(window).scroll(function() {
+        $(window).scroll(debounce(function() {
             var scrollTop = $(window).scrollTop();
 
             if(offsetTop - menuHeight < scrollTop && offsetTop + heightSection - menuHeight > scrollTop) {
@@ -61,7 +77,7 @@ $(document).ready(function() {
             } else{
                 $itemMenu.removeClass('active');
             }
-        });
+        }, 200));
     });
 
     // Botão do menu mobile
@@ -71,55 +87,59 @@ $(document).ready(function() {
     });
 
     // Slide
-    function slider(sliderName, velocidade) {
-        var sliderClass = '.' + sliderName,
-            activeClass = 'active',
-            rotate = setInterval(rotateSlide, velocidade);
+    (function() {
+        function slider(sliderName, velocidade) {
+            var sliderClass = '.' + sliderName,
+                activeClass = 'active',
+                rotate = setInterval(rotateSlide, velocidade);
 
-        $(sliderClass + ' > :first').addClass(activeClass);
+            $(sliderClass + ' > :first').addClass(activeClass);
 
-        $(sliderClass).hover(function() {
-            clearInterval(rotate);
-        }, function() {
-            rotate = setInterval(rotateSlide, velocidade);
-        });
+            $(sliderClass).hover(function() {
+                clearInterval(rotate);
+            }, function() {
+                rotate = setInterval(rotateSlide, velocidade);
+            });
 
-        function rotateSlide() {
-            var activeSlide = $(sliderClass + ' > .' + activeClass),
-                nextSlide = activeSlide.next();
-    
-            if(nextSlide.length == 0) {
-                nextSlide = $(sliderClass + ' > :first');
+            function rotateSlide() {
+                var activeSlide = $(sliderClass + ' > .' + activeClass),
+                    nextSlide = activeSlide.next();
+        
+                if(nextSlide.length == 0) {
+                    nextSlide = $(sliderClass + ' > :first');
+                }
+        
+                activeSlide.removeClass(activeClass);
+                nextSlide.addClass(activeClass);
             }
-    
-            activeSlide.removeClass(activeClass);
-            nextSlide.addClass(activeClass);
         }
-    }
 
-    slider('introducao', 2000);
+        slider('introducao', 2000);
+    })();
 
     // Animação ao scroll
-    var $target = $('[data-anime="scroll"]'),
-        animationClass = 'animate',
-        offset = $(window).height() * 4/5;
+    (function() {
+        var $target = $('[data-anime="scroll"]'),
+            animationClass = 'animate',
+            offset = $(window).height() * 4/5;
 
-    function animeScroll() {
-        var documentTop = $(window).scrollTop();
-        $target.each(function() {
-            var itemTop = $(this).offset().top;
+        function animeScroll() {
+            var documentTop = $(window).scrollTop();
+            $target.each(function() {
+                var itemTop = $(this).offset().top;
 
-            if(documentTop > itemTop - offset) {
-                $(this).addClass(animationClass);
-            } else {
-                $(this).removeClass(animationClass);
-            }
-        });
-    }
+                if(documentTop > itemTop - offset) {
+                    $(this).addClass(animationClass);
+                } else {
+                    $(this).removeClass(animationClass);
+                }
+            });
+        }
 
-    animeScroll();
-
-    $(document).scroll(function() {
         animeScroll();
-    })
+
+        $(document).scroll(debounce(function() {
+            animeScroll();
+        }, 200));
+    })();
 });
